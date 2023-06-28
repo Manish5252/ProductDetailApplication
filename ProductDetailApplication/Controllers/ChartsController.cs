@@ -17,10 +17,9 @@ namespace ProductDetailApplication.Controllers
             return View();
         }
         [HttpGet]
-        public JsonResult GetProductDetails()
+        public async Task<JsonResult> GetProductDetails()
         {
-            return Json(_context.ProductDetails.ToListAsync());
-          
+            return Json(await _context.ProductDetails.ToListAsync());
         }
     }
 }

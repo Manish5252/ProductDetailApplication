@@ -1,31 +1,97 @@
-﻿<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-<script src="https://cdn.canvasjs.com/ga/canvasjs.min.js"></script>
-<script src="https://cdn.canvasjs.com/ga/canvasjs.stock.min.js"></script>
+﻿@{
+    Layout = "";
+}
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script>
+    var outputresult = [];
+    var dataPointsData = [];
+    function filter(mincount, maxcount) {
+        var data = [];
+        $.each(outputresult, function (index, value) {
+            if (value.price >= mincount && value.price <= maxcount) {
+                data.push({ label: value.productTitle, y: value.price });
+            }
+        });
+        return data;
+    }
     $(document).ready(function () {
 
-		var options = {
-			title: {
-				text: "Column Chart in jQuery CanvasJS"
-			},
-			data: [
-				{
-					// Change type to "doughnut", "line", "splineArea", etc.
-					type: "column",
-					dataPoints: [
-						{ label: "apple", y: 10 },
-						{ label: "orange", y: 15 },
-						{ label: "banana", y: 25 },
-						{ label: "mango", y: 30 },
-						{ label: "grape", y: 28 }
-					]
-				}
-			]
-		};
+        $.ajax({
+            url: '@Url.Action("GetProductDetails", "Charts")',
+            type: "GET",
+            success: function (result) {
+                outputresult = result;
+                $.each(result, function (index, value) {
+                    dataPointsData.push({ label: value.productTitle, y: value.price })
+                    //alert(index + ": " + value);
+                });
+                //Better to construct options first and then pass it as a parameter
+                var options = {
+                    title: {
+                        text: "Column Chart in jQuery CanvasJS"
+                    },
+                    data: [
+                        {
+                            // Change type to "doughnut", "line", "splineArea", etc.
+                            type: "column",
+                            dataPoints: dataPointsData
+                        }
+                    ]
+                };
 
-		$("#chartContainer").CanvasJSChart(options);
-    }
+                $("#chartContainer").CanvasJSChart(options);
+            }
+        });
+        $('#myamountfilter').click(function () {
+            var selectValue = $(this).val();
+            var result;
+            if (selectValue === 'all') {
+                result = filter(0,1000000000);
+            }
+            else if (selectValue === 'belowthousand') {
+                result = filter(0, 1000);
+            }
+            else if (selectValue === 'belowtwothousand') {
+                result = filter(1000, 2000);
+            }
+            else if (selectValue === 'belowthreethusand') {
+                result = filter(2000, 3000);
+            }
+            else if (selectValue === 'belowfivethousand') {
+                result = filter(3000, 5000);
+            }
+            else if (selectValue === 'abovefivethousand') {
+                result = filter(5000, 1000000000);
+            }
+            //Better to construct options first and then pass it as a parameter
+            var options = {
+                title: {
+                    text: "Column Chart in jQuery CanvasJS"
+                },
+                data: [
+                    {
+                        // Change type to "doughnut", "line", "splineArea", etc.
+                        type: "column",
+                        dataPoints: result
+                    }
+                ]
+            };
 
+            $("#chartContainer").CanvasJSChart(options);
+        });
+
+    });
 </script>
 
-<p id="chartContainer"></p>
+<p>Amount between :</p>
+<select id='myamountfilter'>
+    <option value="all">All data</option>
+    <option value="belowthousand">0-1000</option>
+    <option value="belowtwothousand">1001-2000</option>
+    <option value="belowthreethusand">2001-3000</option>
+    <option value="belowfivethousand">3001-5000</option>
+    <option value="abovefivethousand">5000-above</option>
+</select>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+@*<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>*@
+<script type="text/javascript" src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
