@@ -1,9 +1,14 @@
-using ProductDetailApplication.Models;
+﻿using ProductDetailApplication.Models;
+using ProductDetailApplication.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<ProductDBContext>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -15,6 +20,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -25,5 +36,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//app.MapProductDetailsEndpoints();
 
 app.Run();

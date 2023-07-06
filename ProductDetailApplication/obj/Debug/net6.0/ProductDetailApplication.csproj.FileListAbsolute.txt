@@ -265,3 +265,8 @@ D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\ne
 D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\net6.0\Microsoft.OpenApi.dll
+D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\ScrrumLabsTask\ProductDetailApplication\ProductDetailApplication\obj\Debug\net6.0\ProductDetailApplication.MvcApplicationPartsAssemblyInfo.cs

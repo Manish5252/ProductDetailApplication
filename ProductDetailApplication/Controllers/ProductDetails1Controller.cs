@@ -11,16 +11,16 @@ namespace ProductDetailApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductDetailsController : ControllerBase
+    public class ProductDetails1Controller : ControllerBase
     {
         private readonly ProductDBContext _context;
 
-        public ProductDetailsController(ProductDBContext context)
+        public ProductDetails1Controller(ProductDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/ProductDetails
+        // GET: api/ProductDetails1
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDetails>>> GetProductDetails()
         {
@@ -31,7 +31,7 @@ namespace ProductDetailApplication.Controllers
             return await _context.ProductDetails.ToListAsync();
         }
 
-        // GET: api/ProductDetails/5
+        // GET: api/ProductDetails1/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDetails>> GetProductDetails(int id)
         {
@@ -49,18 +49,20 @@ namespace ProductDetailApplication.Controllers
             return productDetails;
         }
 
-
-        // PUT: api/ProductDetails/5
+        // PUT: api/ProductDetails1/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProductDetails(int id, [FromForm] ProductDetails productDetails)
+        public async Task<IActionResult> PutProductDetails(int id, ProductDetails productDetails)
         {
+            if (id != productDetails.ProductId)
+            {
+                return BadRequest();
+            }
 
             _context.Entry(productDetails).State = EntityState.Modified;
 
             try
             {
-                _context.ChangeTracker.Clear(); 
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -78,31 +80,22 @@ namespace ProductDetailApplication.Controllers
             return NoContent();
         }
 
-        // POST: api/ProductDetails
+        // POST: api/ProductDetails1
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ProductDetails>> PostProductDetails([FromForm] ProductDetails productDetails)
+        public async Task<ActionResult<ProductDetails>> PostProductDetails(ProductDetails productDetails)
         {
           if (_context.ProductDetails == null)
           {
               return Problem("Entity set 'ProductDBContext.ProductDetails'  is null.");
           }
-            string wwwRootPath = @"C:\Users\dell\Desktop\ProductImages";
-            string fileName = Path.GetFileNameWithoutExtension(productDetails.ImageFile.FileName);
-            string extension = Path.GetExtension(productDetails.ImageFile.FileName);
-            productDetails.Image  = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-            string path = Path.Combine(wwwRootPath + "/Image/", productDetails.Image);
-            using (var fileStream = new FileStream(path, FileMode.Create))
-            {
-                await productDetails.ImageFile.CopyToAsync(fileStream);
-            }
             _context.ProductDetails.Add(productDetails);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProductDetails", new { id = productDetails.ProductId }, productDetails);
         }
 
-        // DELETE: api/ProductDetails/5
+        // DELETE: api/ProductDetails1/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductDetails(int id)
         {
