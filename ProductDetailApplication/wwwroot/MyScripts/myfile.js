@@ -28,22 +28,42 @@ function loadData() {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (obj) {
-            var dataSet = new Array;
-            if (!('error' in obj)) {
-                $.each(obj, function (index, value) {
-                    var tempArray = new Array;
-                    for (var o in value) {
-                        tempArray.push(value[o]);
+            var html = '';
+            $.each(obj, function (key, item) {
+                html += '<tr>';
+                html += '<td>' + item.productId + '</td>';
+                html += '<td>' + item.productTitle + '</td>';
+                html += '<td>' + item.image + '</td>';
+                html += '<td>' + item.price + '</td>';
+                html += '<td>' + item.stock + '</td>';
+                html += '<td><a href="#" onclick="return getbyID(' + item.productId + ')">Edit</a> | <a href="#" onclick="Delete(' + item.productId + ')">Delete</a></td>';
+                html += '</tr>';
+            });
+            $('.tbody').html(html);
+            $('#demo1').DataTable({
+                'order': [[0, 'desc']],
+                'aoColumns': [
+                    null,
+                    {
+                        'bSortable': false
                     }
-                    dataSet.push(tempArray);
-                })
-                var table = $('#example').DataTable();
-                table.destroy();
-                $('#example').empty();
-                $('#example').DataTable({
-                    data: obj
-                });
-            }
+                ] });
+            //var dataSet = new Array;
+            //if (!('error' in obj)) {
+            //    $.each(obj, function (index, value) {
+            //        var tempArray = new Array;
+            //        for (var o in value) {
+            //            tempArray.push(value[o]);
+            //        }
+            //        dataSet.push(tempArray);
+            //    })
+            //    var table = $('#example').DataTable();
+            //    table.destroy();
+            //    $('#example').empty();
+            //    $('#example').DataTable({
+            //        data: obj
+            //    });
+            //}
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
