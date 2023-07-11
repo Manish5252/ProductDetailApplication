@@ -1,7 +1,7 @@
 ﻿//Load Data in Table when documents is ready  
-var fileData;
+//var fileData;
 $(document).ready(function () {
-   
+    $.noConflict();
     loadData();
 
     $('#Image').on('change', function (e) {
@@ -20,7 +20,6 @@ $(document).ready(function () {
     });
 });
 
-
 //Load Data function  
 function loadData() {
     $.ajax({
@@ -28,25 +27,29 @@ function loadData() {
         type: "GET",
         contentType: "application/json;charset=utf-8",
         dataType: "json",
-        success: function (result) {
-            var html = '';
-            $.each(result, function (key, item) {
-                html += '<tr>';
-                html += '<td>' + item.productId + '</td>';
-                html += '<td>' + item.productTitle + '</td>';
-                html += '<td>' + item.image + '</td>';
-                html += '<td>' + item.price + '</td>';
-                html += '<td>' + item.stock + '</td>';
-                html += '<td><a href="#" onclick="return getbyID(' + item.productId + ')">Edit</a> | <a href="#" onclick="Delete(' + item.productId + ')">Delete</a></td>';
-                html += '</tr>';
-            });
-            $('.tbody').html(html);
+        success: function (obj) {
+            var dataSet = new Array;
+            if (!('error' in obj)) {
+                $.each(obj, function (index, value) {
+                    var tempArray = new Array;
+                    for (var o in value) {
+                        tempArray.push(value[o]);
+                    }
+                    dataSet.push(tempArray);
+                })
+                var table = $('#example').DataTable();
+                table.destroy();
+                $('#example').empty();
+                $('#example').DataTable({
+                    data: obj
+                });
+            }
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
         }
     });
-}
+};
 
 //Add Data Function
 function Add() {
@@ -54,7 +57,7 @@ function Add() {
     if (res == false) {
         return false;
     }
-  
+
     //var empObj = {
     //    ProductID: $('#ProductId').val(),
     //    ProductTitle: $('#ProductTitle').val(),
@@ -109,7 +112,7 @@ function getbyID(ProductId) {
             $('#ProductTitle').val(result.productTitle);
             $('#Price').val(result.price);
             $('#Stock').val(result.stock);
-           /* $('#Image').val(result.image);*/
+            /* $('#Image').val(result.image);*/
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -127,7 +130,7 @@ function Update() {
     if (fileData == undefined) {
         fileData = new FormData();
         fileData.append("ImageFile", $('#imageNameforedit'));
-    } 
+    }
     fileData.append("ProductID", $('#ProductId').val());
     fileData.append("ProductTitle", $('#ProductTitle').val());
     fileData.append("Image", $('#imageNameforedit').val());
@@ -176,11 +179,11 @@ function Delete(ProductID) {
             }
         });
     }
-}  
+}
 
-//Valdidation using jquery  
-function validate() {
-    var isValid = true;
+//Valdidation using jquery
+//function validate() {
+   // var isValid = true;
     //if ($('#ProductTitle').val().trim() == "") {
     //    $('#ProductTitle').css('border-color', 'Red');
     //    isValid = false;
@@ -209,5 +212,17 @@ function validate() {
     //else {
     //    $('#Stock').css('border-color', 'lightgrey');
     //}
-    return isValid;
-}  
+   // return isValid;
+//}
+
+
+// $('#example').DataTable( {
+//    ajax: 'data/objects.txt',
+//    columns: [
+//        { data: 'ProductID' },
+//        { data: 'ProductTitle' },
+//        { data: 'Image' },
+//        { data: 'Price' },
+//        { data: 'Stock' }
+//    ]
+//});
